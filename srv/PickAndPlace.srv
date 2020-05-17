@@ -1,0 +1,9 @@
+#request constants
+uint8 CASE_1 = 1
+uint8 CASE_2 = 2
+uint8 CASE_3 = 3
+#request fields
+uint8 case
+---
+#response fields
+uint8 case

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>visy_sorting_app_pkg</name>
+  <version>0.1.0</version>
+  <description>-</description>
+
+  <maintainer email="deltarobotone@web.de">-</maintainer>
+
+  <license>LGPLv3</license>
+
+  <author>deltarobotone</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>one_easy_protocol_pkg</build_depend>
+  <build_depend>visy_neopixel_pkg</build_depend>
+  <build_depend>visy_detector_pkg</build_depend>
+
+  <build_depend>message_generation</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+
+  <exec_depend>one_easy_protocol_pkg</exec_depend>
+  <exec_depend>visy_neopixel_pkg</exec_depend>
+  <exec_depend>visy_detector_pkg</exec_depend>
+
+  <exec_depend>message_runtime</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+
+  <export>
+  </export>
+</package>
