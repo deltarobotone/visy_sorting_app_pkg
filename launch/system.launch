@@ -7,7 +7,7 @@
     <node type="conveyor_detector_node" pkg="visy_detector_pkg" name="conveyor_detector_node" output="screen" respawn="true">
       <param name="_image_transport" value="compressed"/>
     </node>
-    <node type="metal_chip_detector_node.py" pkg="visy_detector_pkg" name="metal_chip_detector_node" output="screen" respawn="true">
+    <node type="metal_chip_detector_node" pkg="visy_detector_pkg" name="metal_chip_detector_node" output="screen" respawn="true">
       <param name="_image_transport" value="compressed"/>
     </node>
     <arg name="enable_raw" default="false"/>
