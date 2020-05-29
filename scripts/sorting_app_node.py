@@ -3,6 +3,7 @@
 from visy_sorting_app_pkg.srv import *
 from visy_neopixel_pkg.srv import *
 from one_easy_protocol_pkg.srv import *
+from visy_detector_pkg.srv import *
 import rospy
 
 class SortingAppNode:
@@ -20,6 +21,10 @@ class SortingAppNode:
 
         self.__lightring_cli = rospy.ServiceProxy('ctrl_light_ring',LightRing)
         self.__statusbar_cli = rospy.ServiceProxy('ctrl_status_bar',StatusBar)
+
+        self.__detect_conveyor_cli = rospy.ServiceProxy('detect_conveyor_system',DetectConveyorSystem)
+        self.__start_detector_cli = rospy.ServiceProxy('start_metalchip_detector',StartMetalChipDetector)
+        self.__stop_detector_cli = rospy.ServiceProxy('stop_metalchip_detector',StopMetalChipDetector)
 
         self.__start = False
         self.__startUpState = False
@@ -47,6 +52,11 @@ class SortingAppNode:
         rospy.wait_for_service('ctrl_light_ring')
         rospy.loginfo("status bar service...")
         rospy.wait_for_service('ctrl_status_bar')
+        rospy.loginfo("detect conveyor system service...")
+        rospy.wait_for_service('detect_conveyor_system')
+        rospy.loginfo("metalchip detector services...")
+        rospy.wait_for_service('start_metalchip_detector')
+        rospy.wait_for_service('stop_metalchip_detector')
         rospy.loginfo("...ready!")
         rospy.loginfo("#######################################")
         return True
@@ -71,6 +81,21 @@ class SortingAppNode:
     def __stopCB(self,req):
         self.__start = False
         self.__startUpState = False
+        rospy.loginfo("system shutdown")
+        rospy.loginfo("#######################################")
+        rospy.loginfo("stop metal chip detector...")
+        self.__start_detector_cli("")
+        rospy.loginfo("stop conveyor system...")
+        self.__extmotor_cli(False,85.0)
+        rospy.loginfo("disable light ring...")
+        self.__lightring_cli(LightRingRequest.FULL,0,0,0,0)
+        rospy.loginfo("disable status bar...")
+        self.__statusbar_cli(StatusBarRequest.FULL,0,0,0,0)
+        rospy.loginfo("disable robot light...")
+        self.__light_cli(RobotLightRequest.OFF,100.0)
+        rospy.loginfo("disconnect robot...")
+        res = self.__disconnect_cli("")
+        rospy.loginfo("#######################################")
         return StopSortingResponse("sorting application stopped!")
 
     #Startup
@@ -91,11 +116,12 @@ class SortingAppNode:
         rospy.loginfo("enable status bar...")
         self.__statusbar_cli(StatusBarRequest.FLOW_SINGLE_CW,255,255,255,255)
         rospy.loginfo("detect conveyor system...")
-
+        self.__detect_conveyor_cli("")
         rospy.loginfo("start conveyor system...")
         self.__extmotor_cli(True,85.0)
         self.__light_cli(RobotLightRequest.WHITE,100.0)
         rospy.loginfo("start metal chip detector...")
+        self.__start_detector_cli("")
         self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,0,255,0,0)
         rospy.loginfo("#######################################")
         return True
