@@ -22,9 +22,9 @@ class SortingAppNode:
         self.__lightring_cli = rospy.ServiceProxy('ctrl_light_ring',LightRing)
         self.__statusbar_cli = rospy.ServiceProxy('ctrl_status_bar',StatusBar)
 
-        self.__detect_conveyor_cli = rospy.ServiceProxy('detect_conveyor_system',DetectConveyorSystem)
-        self.__start_detector_cli = rospy.ServiceProxy('start_metalchip_detector',StartMetalChipDetector)
-        self.__stop_detector_cli = rospy.ServiceProxy('stop_metalchip_detector',StopMetalChipDetector)
+        self.__detect_conveyor_cli = rospy.ServiceProxy('/detect_conveyor_system',DetectConveyorSystem)
+        self.__start_detector_cli = rospy.ServiceProxy('/start_metalchip_detector',StartMetalChipDetector)
+        self.__stop_detector_cli = rospy.ServiceProxy('/stop_metalchip_detector',StopMetalChipDetector)
 
         self.__start = False
         self.__startUpState = False
