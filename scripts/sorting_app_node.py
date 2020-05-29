@@ -53,10 +53,10 @@ class SortingAppNode:
         rospy.loginfo("status bar service...")
         rospy.wait_for_service('ctrl_status_bar')
         rospy.loginfo("detect conveyor system service...")
-        rospy.wait_for_service('detect_conveyor_system')
+        rospy.wait_for_service('/detect_conveyor_system')
         rospy.loginfo("metalchip detector services...")
-        rospy.wait_for_service('start_metalchip_detector')
-        rospy.wait_for_service('stop_metalchip_detector')
+        rospy.wait_for_service('/start_metalchip_detector')
+        rospy.wait_for_service('/stop_metalchip_detector')
         rospy.loginfo("...ready!")
         rospy.loginfo("#######################################")
         return True
