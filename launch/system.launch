@@ -8,8 +8,13 @@
     <node type="pick_and_place_node.py" pkg="visy_sorting_app_pkg" name="pick_and_place_node" output="screen" respawn="true"/>
     <node type="sorting_app_node.py" pkg="visy_sorting_app_pkg" name="sorting_app_node" output="screen" respawn="true"/>
 
-    <node type="conveyor_detector_node" pkg="visy_detector_pkg" name="conveyor_detector_node" output="screen" respawn="true" args="_image_transport:=compressed"/>
-    <node type="metal_chip_detector_node" pkg="visy_detector_pkg" name="metal_chip_detector_node" output="screen" respawn="true" args="_image_transport:=compressed">
+    <node type="conveyor_detector_node" pkg="visy_detector_pkg" name="conveyor_detector_node" output="screen" respawn="true">
+      <param name="image_transport" value="compressed" />
+    </node>
+
+    <node type="metal_chip_detector_node" pkg="visy_detector_pkg" name="metal_chip_detector_node" output="screen" respawn="true">
+      <param name="image_transport" value="compressed" />
+    </node>
 
     <arg name="enable_raw" default="false"/>
     <arg name="enable_imv" default="false"/>
