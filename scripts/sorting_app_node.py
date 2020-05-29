@@ -118,7 +118,7 @@ class SortingAppNode:
         rospy.loginfo("detect conveyor system...")
         self.__detect_conveyor_cli("")
         rospy.loginfo("start conveyor system...")
-        self.__extmotor_cli(True,100.0)
+        self.__extmotor_cli(True,200.0)
         self.__light_cli(RobotLightRequest.WHITE,100.0)
         rospy.loginfo("start metal chip detector...")
         self.__start_detector_cli("")
