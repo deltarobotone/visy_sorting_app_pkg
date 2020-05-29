@@ -9,10 +9,10 @@
     <node type="sorting_app_node.py" pkg="visy_sorting_app_pkg" name="sorting_app_node" output="screen" respawn="true"/>
 
     <node type="conveyor_detector_node" pkg="visy_detector_pkg" name="conveyor_detector_node" output="screen" respawn="true">
-      <param name="_image_transport" value="compressed"/>
+      <param name="image_transport" value="compressed"/>
     </node>
     <node type="metal_chip_detector_node" pkg="visy_detector_pkg" name="metal_chip_detector_node" output="screen" respawn="true">
-      <param name="_image_transport" value="compressed"/>
+      <param name="image_transport" value="compressed"/>
     </node>
 
     <arg name="enable_raw" default="false"/>
