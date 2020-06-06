@@ -26,6 +26,11 @@ class SortingAppNode:
         self.__start_detector_cli = rospy.ServiceProxy('/start_metalchip_detector',StartMetalChipDetector)
         self.__stop_detector_cli = rospy.ServiceProxy('/stop_metalchip_detector',StopMetalChipDetector)
 
+        self.__start_grasp_planner_cli = rospy.ServiceProxy('start_grasp_planner',StartGraspPlanner)
+        self.__stop_grasp_planner_cli = rospy.ServiceProxy('stop_grasp_planner',StopGraspPlanner)
+
+        self.__pick_and_place_cli = rospy.ServiceProxy('pick_and_place',PickAndPlace)
+
         self.__start = False
         self.__startUpState = False
         self.__serviceState = False
@@ -57,6 +62,11 @@ class SortingAppNode:
         rospy.loginfo("metalchip detector services...")
         rospy.wait_for_service('/start_metalchip_detector')
         rospy.wait_for_service('/stop_metalchip_detector')
+        rospy.loginfo("pick and place service...")
+        rospy.wait_for_service('pick_and_place')
+        rospy.loginfo("grasp planner services...")
+        rospy.wait_for_service('start_grasp_planner')
+        rospy.wait_for_service('stop_grasp_planner')
         rospy.loginfo("...ready!")
         rospy.loginfo("#######################################")
         return True
@@ -83,6 +93,8 @@ class SortingAppNode:
         self.__startUpState = False
         rospy.loginfo("system shutdown")
         rospy.loginfo("#######################################")
+        rospy.loginfo("stop grasp planner...")
+        self.__stop_grasp_planner_cli("")
         rospy.loginfo("stop metal chip detector...")
         self.__stop_detector_cli("")
         rospy.loginfo("stop conveyor system...")
@@ -122,6 +134,8 @@ class SortingAppNode:
         self.__light_cli(RobotLightRequest.WHITE,100.0)
         rospy.loginfo("start metal chip detector...")
         self.__start_detector_cli("")
+        rospy.loginfo("start grasp planner...")
+        self.__start_grasp_planner_cli("")
         self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,0,255,0,0)
         rospy.loginfo("#######################################")
         return True
@@ -129,7 +143,12 @@ class SortingAppNode:
     #Cyclic main function
     def __step(self):
         if self.__start == True and self.__startUpState == True and self.__serviceState == True:
-            return True
+           # //colour=1 rot
+           # if ((hue >= 0 && hue < 10) || (hue <= 180 && hue > 160)) colour = 1;
+            #//colour=2 gelb
+            #if (hue >= 15 && hue < 45) colour = 2;
+            #//colour=3 blau
+            #if (hue >= 100 && hue < 130) colour = 3;
         return True
 
     def run(self):

@@ -7,7 +7,7 @@ find_package(catkin REQUIRED COMPONENTS message_generation one_easy_protocol_pkg
 
 catkin_python_setup()
 
-add_service_files(DIRECTORY srv FILES StartSorting.srv StopSorting.srv PickAndPlace.srv)
+add_service_files(DIRECTORY srv FILES StartSorting.srv StopSorting.srv StartGraspPlanner.srv StopGraspPlanner.srv PickAndPlace.srv)
 
 generate_messages(DEPENDENCIES std_msgs)
 
@@ -15,6 +15,7 @@ catkin_package(CATKIN_DEPENDS one_easy_protocol_pkg visy_neopixel_pkg visy_detec
 
 catkin_install_python(PROGRAMS
     scripts/sorting_app_node.py
+    scripts/grasp_planner_node.py
     scripts/pick_and_place_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

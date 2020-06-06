@@ -75,9 +75,7 @@ class PickAndPlaceNode:
 
     def run(self):
         rospy.init_node("pick_and_place_node")
-        rate = rospy.Rate(10)
-        while not rospy.is_shutdown():
-            rate.sleep()
+        rospy.spin()
 
 if __name__ == "__main__":
     pickAndPlaceNode = PickAndPlaceNode()
