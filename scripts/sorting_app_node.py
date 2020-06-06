@@ -142,7 +142,7 @@ class SortingAppNode:
 
     #Cyclic main function
     def __step(self):
-        if self.__start == True and self.__startUpState == True and self.__serviceState == True:
+        #if self.__start == True and self.__startUpState == True and self.__serviceState == True:
            # //colour=1 rot
            # if ((hue >= 0 && hue < 10) || (hue <= 180 && hue > 160)) colour = 1;
             #//colour=2 gelb

@@ -17,7 +17,7 @@ class SortingAppNode:
         return None
 
     #Reset
-    def __reset():
+    def __reset(self):
         self.__metalChips = []
         self.__metalChipLast = MetalChip()
 
