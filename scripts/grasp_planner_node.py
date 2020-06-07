@@ -48,7 +48,7 @@ class SortingAppNode:
                 vel = vel + metalChip.vel
             vel = vel/len(self.__metalChips)
 
-            time = (800 - self.__metalChipLast.pos)/(vel*2000.0)
+            time = (4000 - self.__metalChipLast.pos)/(vel*1000.0)
             rospy.loginfo("pos")
             rospy.loginfo(self.__metalChipLast.pos)
 
@@ -59,7 +59,10 @@ class SortingAppNode:
             rospy.loginfo(time)
 
             rospy.sleep(time)
-            self.__pick_and_place_cli(PickAndPlaceRequest.CASE_1)
+
+            if self.__metalChipLast.hue == 1: self.__pick_and_place_cli(PickAndPlaceRequest.CASE_1)
+            if self.__metalChipLast.hue == 2: self.__pick_and_place_cli(PickAndPlaceRequest.CASE_2)
+            if self.__metalChipLast.hue == 3: self.__pick_and_place_cli(PickAndPlaceRequest.CASE_3)
 
             self.__reset()
 

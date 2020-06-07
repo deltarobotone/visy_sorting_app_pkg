@@ -15,10 +15,10 @@ class PickAndPlaceNode:
         self.__connect_cli = rospy.ServiceProxy('ctrl_robot_connect',RobotConnect)
         self.__disconnect_cli = rospy.ServiceProxy('ctrl_robot_disconnect',RobotDisconnect)
         self.__robotVel = 75.0
-        self.__posCase1 = [10.0, 15.0, 95.0]
-        self.__posCase2 = [15.0, 15.0, 95.0]
-        self.__posCase3 = [20.0, 15.0, 95.0]
-        self.__posConveyor = [-15.0, -15.0, 100.0]
+        self.__posCase1 = [25.0, 25.0, 100.0]
+        self.__posCase2 = [0.0, 25.0, 100.0]
+        self.__posCase3 = [-25.0, 25.0, 100.0]
+        self.__posConveyor = [0.0, -20.0, 110.0]
         self.__posHome = [0.0, 0.0, 70.0]
         return None
     
@@ -71,6 +71,7 @@ class PickAndPlaceNode:
             rospy.sleep(0.5)
             self.__move_cli(self.__posHome[0],self.__posHome[1],self.__posHome[2],self.__robotVel)
             self.__extmotor_cli(True,200.0)
+
         return PickAndPlaceResponse(req.case)
 
 
