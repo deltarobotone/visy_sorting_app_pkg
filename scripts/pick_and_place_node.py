@@ -14,11 +14,11 @@ class PickAndPlaceNode:
         self.__gripper_cli = rospy.ServiceProxy('ctrl_robot_gripper',RobotGripper)
         self.__connect_cli = rospy.ServiceProxy('ctrl_robot_connect',RobotConnect)
         self.__disconnect_cli = rospy.ServiceProxy('ctrl_robot_disconnect',RobotDisconnect)
-        self.__robotVel = 75.0
+        self.__robotVel = 90.0
         self.__posCase1 = [25.0, 25.0, 100.0]
         self.__posCase2 = [0.0, 25.0, 100.0]
         self.__posCase3 = [-25.0, 25.0, 100.0]
-        self.__posConveyor = [0.0, -20.0, 110.0]
+        self.__posConveyor = [0.0, -20.0, 113.0]
         self.__posHome = [0.0, 0.0, 70.0]
         return None
     
@@ -54,20 +54,22 @@ class PickAndPlaceNode:
                 self.__light_cli(RobotLightRequest.RED,100.0)
                 self.__move_cli(self.__posCase1[0],self.__posCase1[1],self.__posCase1[2]-10.0,self.__robotVel)
                 self.__move_cli(self.__posCase1[0],self.__posCase1[1],self.__posCase1[2],self.__robotVel)
+                self.__gripper_cli(False)
                 self.__move_cli(self.__posCase1[0],self.__posCase1[1],self.__posCase1[2]-10.0,self.__robotVel)
             if req.case == req.CASE_2:
                 self.__light_cli(RobotLightRequest.BLUE,100.0)
                 self.__move_cli(self.__posCase2[0],self.__posCase2[1],self.__posCase2[2]-10.0,self.__robotVel)
                 self.__move_cli(self.__posCase2[0],self.__posCase2[1],self.__posCase2[2],self.__robotVel)
+                self.__gripper_cli(False)
                 self.__move_cli(self.__posCase2[0],self.__posCase2[1],self.__posCase2[2]-10.0,self.__robotVel)
             if req.case == req.CASE_3:
                 self.__light_cli(RobotLightRequest.YELLOW,100.0)
                 self.__move_cli(self.__posCase3[0],self.__posCase3[1],self.__posCase3[2]-10.0,self.__robotVel)
                 self.__move_cli(self.__posCase3[0],self.__posCase3[1],self.__posCase3[2],self.__robotVel)
+                self.__gripper_cli(False)
                 self.__move_cli(self.__posCase3[0],self.__posCase3[1],self.__posCase3[2]-10.0,self.__robotVel)
-                self.__light_cli(RobotLightRequest.WHITE,100.0)
 
-            self.__gripper_cli(False)
+            self.__light_cli(RobotLightRequest.WHITE,100.0)
             rospy.sleep(0.5)
             self.__move_cli(self.__posHome[0],self.__posHome[1],self.__posHome[2],self.__robotVel)
             self.__extmotor_cli(True,200.0)
