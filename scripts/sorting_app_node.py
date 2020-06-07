@@ -124,7 +124,7 @@ class SortingAppNode:
         res = self.__light_cli(RobotLightRequest.WHITE,100.0)
         rospy.loginfo(res.res)
         rospy.loginfo("enable light ring...")
-        self.__lightring_cli(LightRingRequest.FULL,255,255,255,255)
+        #self.__lightring_cli(LightRingRequest.FULL,255,255,255,255)
         rospy.loginfo("enable status bar...")
         self.__statusbar_cli(StatusBarRequest.FLOW_SINGLE_CW,255,255,255,255)
         rospy.loginfo("detect conveyor system...")
@@ -142,13 +142,6 @@ class SortingAppNode:
 
     #Cyclic main function
     def __step(self):
-        #if self.__start == True and self.__startUpState == True and self.__serviceState == True:
-           # //colour=1 rot
-           # if ((hue >= 0 && hue < 10) || (hue <= 180 && hue > 160)) colour = 1;
-            #//colour=2 gelb
-            #if (hue >= 15 && hue < 45) colour = 2;
-            #//colour=3 blau
-            #if (hue >= 100 && hue < 130) colour = 3;
         return True
 
     def run(self):
