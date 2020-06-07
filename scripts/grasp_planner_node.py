@@ -34,21 +34,18 @@ class SortingAppNode:
         return StopGraspPlannerResponse("grasp planner stopped!")
 
     def __metalChipCB(self,metalChipMsg):
-        #metalChipMsg.hue
-        #metalChipMsg.pos
-        #metalChipMsg.vel
-        if self.__start == True and self.__metalChips.len() < 10:
-            if metalChipMsg.hue == metalChipLast.hue and metalChipMsg.pos > metalChipLast.pos:
+        if self.__start == True and len(self.__metalChips) < 10:
+            if metalChipMsg.pos > self.__metalChipLast.pos:
                 self.__metalChips.append(metalChipMsg)
                 self.__metalChipLast = metalChipMsg
             else:
                 self.__reset()
 
-        if self.__metalChips.len() >= 10:
+        if len(self.__metalChips) >= 10:
             vel = 0
             for metalChip in self.__metalChips:
                 vel = vel + metalChip.vel
-            vel = vel/self.__metalChips.len()
+            vel = vel/len(self.__metalChips)
 
             time = (2000 - self.__metalChipLast.pos)/vel
 
