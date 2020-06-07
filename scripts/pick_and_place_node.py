@@ -35,6 +35,7 @@ class PickAndPlaceNode:
     #Pick and place
     def __pickandPlaceCB(self,req):
         if self.checkServices():
+            self.__extmotor_cli(False,100.0)
             self.__move_cli(self.__posHome[0],self.__posHome[1],self.__posHome[2],self.__robotVel)
             self.__gripper_cli(False)
             self.__light_cli(RobotLightRequest.GREEN,100.0)
@@ -69,7 +70,7 @@ class PickAndPlaceNode:
             self.__gripper_cli(False)
             rospy.sleep(0.5)
             self.__move_cli(self.__posHome[0],self.__posHome[1],self.__posHome[2],self.__robotVel)
-
+            self.__extmotor_cli(True,200.0)
         return PickAndPlaceResponse(req.case)
 
 
