@@ -35,6 +35,7 @@ class SortingAppNode:
         self.__startUpState = False
         self.__serviceState = False
         self.__ctrl_state = 0
+
         return None
 
     #Check services

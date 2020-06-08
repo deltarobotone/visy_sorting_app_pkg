@@ -3,6 +3,7 @@
 from visy_sorting_app_pkg.srv import *
 from visy_detector_pkg.msg import *
 import rospy
+import math
 
 class SortingAppNode:
 
@@ -34,11 +35,8 @@ class SortingAppNode:
         return StopGraspPlannerResponse("grasp planner stopped!")
 
     def __metalChipCB(self,metalChipMsg):
-        rospy.loginfo(metalChipMsg.vel)
-        #now = rospy.get_rostime()
-        #rospy.loginfo(now.nsecs-metalChipMsg.imageTime.nsecs)
 
-        if self.__start == True and len(self.__metalChips) < 60:
+        if self.__start == True and metalChipMsg.pos < 300 and metalChipMsg.pos > 50:
             if metalChipMsg.pos > self.__metalChipLast.pos:
                 self.__metalChips.append(metalChipMsg)
                 self.__metalChipLast = metalChipMsg
@@ -46,13 +44,28 @@ class SortingAppNode:
                 rospy.loginfo("reset 1")
                 self.__reset()
 
-        if len(self.__metalChips) >= 60:
-            vel = 0
-            for metalChip in self.__metalChips:
-                vel = vel + metalChip.vel
+        if metalChipMsg.pos > 300:
+            velocitityArray = []
+            metalChip1 = MetalChip()
+            for metalChip2 in self.__metalChips:
+                if metalChip1.pos != 0:
+                    duration = metalChip1.header.stamp - metalChip2.header.stamp
+                    duration.nsecs/10000000
+                    posChip1 = math.sqrt(pow(metalChip1.pos[0],2)+pow(metalChip1.pos[1],2))
+                    posChip2 = math.sqrt(pow(metalChip2.pos[0],2)+pow(metalChip2.pos[1],2))
+                    distance = posChip2 - posChip1
+                    velocity = distance/duration
+                    velocitityArray.append(velocity)
+                metalChip1 = metalChip2
+
+            for velocitity in velocitityArray:
+                velocitity += velocitity
+
             vel = vel/len(self.__metalChips)
 
-            time = ((4000 - self.__metalChipLast.pos)/(vel*1000.0))/10.0
+            now = rospy.get_rostime()
+
+            time = ((3200 - self.__metalChipLast.pos)/(vel*1000.0))/10.0
             rospy.loginfo("pos")
             rospy.loginfo(self.__metalChipLast.pos)
 
@@ -73,6 +86,13 @@ class SortingAppNode:
             #case=3 blau
             if (hue >= 100 and hue < 130): case = 3
 
+
+            #self.__now = rospy.get_rostime()
+            #self.__last = rospy.get_rostime()
+            #self.__now = rospy.get_rostime()
+            #d = self.__now-self.__last
+            #rospy.loginfo(d.nsecs/10000000)
+            #self.__last = self.__now
 
             if case == 1: self.__pick_and_place_cli(PickAndPlaceRequest.CASE_1)
             if case == 2: self.__pick_and_place_cli(PickAndPlaceRequest.CASE_2)
