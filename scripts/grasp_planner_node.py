@@ -34,15 +34,19 @@ class SortingAppNode:
         return StopGraspPlannerResponse("grasp planner stopped!")
 
     def __metalChipCB(self,metalChipMsg):
-        rospy.loginfo("callback")
-        if self.__start == True and len(self.__metalChips) < 30:
+        rospy.loginfo(metalChipMsg.vel)
+        #now = rospy.get_rostime()
+        #rospy.loginfo(now.nsecs-metalChipMsg.imageTime.nsecs)
+
+        if self.__start == True and len(self.__metalChips) < 60:
             if metalChipMsg.pos > self.__metalChipLast.pos:
                 self.__metalChips.append(metalChipMsg)
                 self.__metalChipLast = metalChipMsg
             else:
+                rospy.loginfo("reset 1")
                 self.__reset()
 
-        if len(self.__metalChips) >= 30:
+        if len(self.__metalChips) >= 60:
             vel = 0
             for metalChip in self.__metalChips:
                 vel = vel + metalChip.vel
@@ -75,6 +79,7 @@ class SortingAppNode:
             if case == 3: self.__pick_and_place_cli(PickAndPlaceRequest.CASE_3)
 
             self.__reset()
+            rospy.loginfo("reset 2")
 
     def run(self):
         rospy.init_node("grasp_planner_node")

@@ -18,7 +18,7 @@ class PickAndPlaceNode:
         self.__posCase1 = [25.0, 25.0, 100.0]
         self.__posCase2 = [0.0, 25.0, 100.0]
         self.__posCase3 = [-25.0, 25.0, 100.0]
-        self.__posConveyor = [0.0, -20.0, 113.0]
+        self.__posConveyor = [0.0, -20.0, 117.0]
         self.__posHome = [0.0, 0.0, 70.0]
         return None
     
