@@ -4,7 +4,7 @@ from distutils.core import setup
 from catkin_pkg.python_setup import generate_distutils_setup
 
 setup_args = generate_distutils_setup(
-    packages=['one_easy_protocol_pkg'],
+    packages=['visy_sorting_app_pkg'],
     package_dir={'': 'scripts'}
     )
 

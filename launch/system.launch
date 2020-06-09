@@ -7,6 +7,7 @@
 
     <node type="pick_and_place_node.py" pkg="visy_sorting_app_pkg" name="pick_and_place_node" output="screen" respawn="true"/>
     <node type="sorting_app_node.py" pkg="visy_sorting_app_pkg" name="sorting_app_node" output="screen" respawn="true"/>
+    <node type="grasp_planner_node.py" pkg="visy_sorting_app_pkg" name="grasp_planner_node" output="screen" respawn="true"/>
 
     <node type="conveyor_detector_node" pkg="visy_detector_pkg" name="conveyor_detector_node" output="screen" respawn="true">
       <param name="image_transport" value="compressed" />
