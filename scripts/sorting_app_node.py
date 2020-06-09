@@ -125,7 +125,7 @@ class SortingAppNode:
         res = self.__light_cli(RobotLightRequest.WHITE,100.0)
         rospy.loginfo(res.res)
         rospy.loginfo("enable light ring...")
-        #self.__lightring_cli(LightRingRequest.FULL,255,255,255,255)
+        self.__lightring_cli(LightRingRequest.FULL,0,0,0,5)
         rospy.loginfo("enable status bar...")
         self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,0,0,0,255)
         rospy.loginfo("detect conveyor system...")

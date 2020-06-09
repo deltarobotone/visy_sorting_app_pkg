@@ -18,7 +18,7 @@ class PickAndPlaceNode:
         self.__posCase1 = [25.0, 25.0, 100.0]
         self.__posCase2 = [0.0, 25.0, 100.0]
         self.__posCase3 = [-25.0, 25.0, 100.0]
-        self.__posConveyor = [0.0, -20.0, 117.0]
+        self.__posConveyor = [0.0, -22.0, 118.0]
         self.__posHome = [0.0, 0.0, 70.0]
         return None
     
@@ -38,7 +38,11 @@ class PickAndPlaceNode:
             self.__extmotor_cli(False,100.0)
             self.__move_cli(self.__posHome[0],self.__posHome[1],self.__posHome[2],self.__robotVel)
             self.__gripper_cli(False)
-            self.__light_cli(RobotLightRequest.GREEN,100.0)
+
+            if req.case == req.CASE_1: self.__light_cli(RobotLightRequest.RED,100.0)
+            if req.case == req.CASE_2: self.__light_cli(RobotLightRequest.YELLOW,100.0)
+            if req.case == req.CASE_3: self.__light_cli(RobotLightRequest.BLUE,100.0)
+
             rospy.sleep(0.5)
 
             self.__move_cli(self.__posConveyor[0],self.__posConveyor[1],self.__posConveyor[2]-10.0,self.__robotVel)
@@ -51,19 +55,16 @@ class PickAndPlaceNode:
             self.__move_cli(self.__posHome[0],self.__posHome[1],self.__posHome[2],self.__robotVel)
 
             if req.case == req.CASE_1:
-                self.__light_cli(RobotLightRequest.RED,100.0)
                 self.__move_cli(self.__posCase1[0],self.__posCase1[1],self.__posCase1[2]-10.0,self.__robotVel)
                 self.__move_cli(self.__posCase1[0],self.__posCase1[1],self.__posCase1[2],self.__robotVel)
                 self.__gripper_cli(False)
                 self.__move_cli(self.__posCase1[0],self.__posCase1[1],self.__posCase1[2]-10.0,self.__robotVel)
             if req.case == req.CASE_2:
-                self.__light_cli(RobotLightRequest.BLUE,100.0)
                 self.__move_cli(self.__posCase2[0],self.__posCase2[1],self.__posCase2[2]-10.0,self.__robotVel)
                 self.__move_cli(self.__posCase2[0],self.__posCase2[1],self.__posCase2[2],self.__robotVel)
                 self.__gripper_cli(False)
                 self.__move_cli(self.__posCase2[0],self.__posCase2[1],self.__posCase2[2]-10.0,self.__robotVel)
             if req.case == req.CASE_3:
-                self.__light_cli(RobotLightRequest.YELLOW,100.0)
                 self.__move_cli(self.__posCase3[0],self.__posCase3[1],self.__posCase3[2]-10.0,self.__robotVel)
                 self.__move_cli(self.__posCase3[0],self.__posCase3[1],self.__posCase3[2],self.__robotVel)
                 self.__gripper_cli(False)
