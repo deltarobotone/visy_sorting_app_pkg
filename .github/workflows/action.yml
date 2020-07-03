@@ -1,11 +1,17 @@
-runs-on: [ubuntu-18.04]
-strategy:
-  matrix:
-    compiler: ["/usr/bin/g++", "/usr/bin/clang++"]
-steps:
-- uses: actions/checkout@v1
-- uses: betwo/github-setup-catkin@v1.0.0
-  with:
-    ros-version: 'melodic'
-    workspace: '$GITHUB_WORKSPACE'
-- run: catkin_make_isolated -DCMAKE_C_COMPILER=${{ matrix.compiler }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  action:
+     runs-on: [ubuntu-18.04]
+     strategy:
+       matrix:
+         compiler: ["/usr/bin/g++", "/usr/bin/clang++"]
+     steps:
+     - uses: actions/checkout@v1
+     - uses: betwo/github-setup-catkin@v1.0.0
+       with:
+         ros-version: 'melodic'
+         workspace: '$GITHUB_WORKSPACE'
+     - run: catkin_make_isolated -DCMAKE_C_COMPILER=${{ matrix.compiler }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}
