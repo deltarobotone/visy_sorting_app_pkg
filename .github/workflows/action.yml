@@ -10,15 +10,26 @@ jobs:
           - {ROS_DISTRO: melodic, ROS_REPO: main, ADDITIONAL_DEBS: ros-melodic-vision-opencv}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: Install python3 setuptools
-        run: sudo apt-get install python3-setuptools
-      - name: Install one-easy-protocol lib
-        run: sudo pip3 install one-easy-protocol
-      - name: Install neopixel lib
-        run: sudo pip3 install rpi_ws281x adafruit-circuitpython-neopixel
-      - uses: 'deltarobotone/one_easy_protocol_pkg@master'
-      - uses: 'deltarobotone/visy_neopixel_pkg@master'
-      - uses: 'deltarobotone/visy_detector_pkg@master'
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Checkout one_easy_protocol_pkg
+        uses: actions/checkout@v2
+          with:
+            repository: deltarobotone/one_easy_protocol_pkg
+            path: one_easy_protocol_pkg
+
+      - name: Checkout visy_neopixel_pkg
+        uses: actions/checkout@v2
+          with:
+            repository: deltarobotone/visy_neopixel_pkg
+            path: visy_neopixel_pkg
+
+      - name: Checkout visy_detector_pkg
+        uses: actions/checkout@v2
+          with:
+            repository: deltarobotone/visy_detector_pkg
+            path: visy_detector_pkg
+      
       - uses: 'ros-industrial/industrial_ci@master'
         env: ${{matrix.env}}
