@@ -15,21 +15,21 @@ jobs:
 
       - name: Checkout one_easy_protocol_pkg
         uses: actions/checkout@v2
-          with:
-            repository: deltarobotone/one_easy_protocol_pkg
-            path: one_easy_protocol_pkg
+        with:
+          repository: deltarobotone/one_easy_protocol_pkg
+          path: one_easy_protocol_pkg
 
       - name: Checkout visy_neopixel_pkg
         uses: actions/checkout@v2
-          with:
-            repository: deltarobotone/visy_neopixel_pkg
-            path: visy_neopixel_pkg
+        with:
+          repository: deltarobotone/visy_neopixel_pkg
+          path: visy_neopixel_pkg
 
       - name: Checkout visy_detector_pkg
         uses: actions/checkout@v2
-          with:
-            repository: deltarobotone/visy_detector_pkg
-            path: visy_detector_pkg
+        with:
+          repository: deltarobotone/visy_detector_pkg
+          path: visy_detector_pkg
       
       - uses: 'ros-industrial/industrial_ci@master'
         env: ${{matrix.env}}
