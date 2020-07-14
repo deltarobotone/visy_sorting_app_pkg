@@ -14,8 +14,8 @@ generate_messages(DEPENDENCIES std_msgs)
 catkin_package(CATKIN_DEPENDS one_easy_protocol_pkg visy_neopixel_pkg visy_detector_pkg std_msgs rospy)
 
 catkin_install_python(PROGRAMS
-    scripts/sorting_app_node.py
-    scripts/grasp_planner_node.py
-    scripts/pick_and_place_node.py
+    scripts/${PROJECT_NAME}/sorting_app_node.py
+    scripts/${PROJECT_NAME}/grasp_planner_node.py
+    scripts/${PROJECT_NAME}/pick_and_place_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
