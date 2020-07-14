@@ -7,33 +7,9 @@ jobs:
     strategy:
       matrix:
         env:
-          - {ROS_DISTRO: melodic, ROS_REPO: main, ADDITIONAL_DEBS: ros-melodic-vision-opencv}
+          - {ROS_DISTRO: melodic, ROS_REPO: main}
     runs-on: ubuntu-latest
     steps:
-
-      - name: Checkout one_easy_protocol_pkg
-        uses: actions/checkout@v2
-        with:
-          repository: deltarobotone/one_easy_protocol_pkg
-          path: one_easy_protocol_pkg
-
-      - name: Checkout visy_neopixel_pkg
-        uses: actions/checkout@v2
-        with:
-          repository: deltarobotone/visy_neopixel_pkg
-          path: visy_neopixel_pkg
-
-      - name: Checkout visy_detector_pkg
-        uses: actions/checkout@v2
-        with:
-          repository: deltarobotone/visy_detector_pkg
-          path: visy_detector_pkg
-
-      - uses: 'ros-industrial/industrial_ci@master'
-        env: ${{matrix.env}}
-
-      - name: Checkout
-        uses: actions/checkout@v2
-
+      - uses: actions/checkout@v1
       - uses: 'ros-industrial/industrial_ci@master'
         env: ${{matrix.env}}
