@@ -10,8 +10,6 @@ jobs:
           - {ROS_DISTRO: melodic, ROS_REPO: main, ADDITIONAL_DEBS: ros-melodic-vision-opencv}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
 
       - name: Checkout one_easy_protocol_pkg
         uses: actions/checkout@v2
@@ -30,6 +28,12 @@ jobs:
         with:
           repository: deltarobotone/visy_detector_pkg
           path: visy_detector_pkg
-      
+
+      - uses: 'ros-industrial/industrial_ci@master'
+        env: ${{matrix.env}}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - uses: 'ros-industrial/industrial_ci@master'
         env: ${{matrix.env}}
