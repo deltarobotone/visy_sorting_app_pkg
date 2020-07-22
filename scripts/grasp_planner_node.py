@@ -13,7 +13,11 @@ class SortingAppNode:
         self.__stop_srv = rospy.Service('stop_grasp_planner', StopGraspPlanner, self.__stopCB)
         self.__pick_and_place_cli = rospy.ServiceProxy('pick_and_place',PickAndPlace)
         self.__statusbar_cli = rospy.ServiceProxy('ctrl_status_bar',StatusBar)
+        self.__grasp_data_pub = rospy.Publisher('grasp_data', GraspData, queue_size=1)
+
         rospy.Subscriber("/metal_chip", MetalChip, self.__metalChipCB, queue_size=1)
+
+        self.__graspDataMsg = GraspData()
         self.__start = False
         self.__calculated = False
         self.__metalChips = []
@@ -75,17 +79,23 @@ class SortingAppNode:
 
             rospy.loginfo("detected metal chips")
             rospy.loginfo(len(self.__metalChips))
+            self.__graspDataMsg.detectedMetalChips=len(self.__metalChips)
 
             velocity = velocity/(len(velocityArray))
 
             rospy.loginfo("last chip position")
             rospy.loginfo(self.__lastPos)
+            self.__graspDataMsg.lastDetectedPosition=self.__lastPos
 
             rospy.loginfo("velocity")
             rospy.loginfo(velocity)
+            self.__graspDataMsg.velocity=velocity
+
 
             case = 0
             hue = self.__metalChipLast.hue
+            self.__graspDataMsg.hue=hue
+
             # case 1 red
             if ((hue >= 0 and hue < 10) or (hue <= 180 and hue > 160)): case = 1
             # case 2 yellow
@@ -93,9 +103,15 @@ class SortingAppNode:
             # case 3 blue
             if (hue >= 100 and hue < 130): case = 3
 
-            if case == 1: self.__statusbar_cli(StatusBarRequest.FULL,255,0,0,0)
-            if case == 2: self.__statusbar_cli(StatusBarRequest.FULL,255,255,0,0)
-            if case == 3: self.__statusbar_cli(StatusBarRequest.FULL,0,0,255,0)
+            if case == 1:
+                self.__statusbar_cli(StatusBarRequest.FULL,255,0,0,0)
+                self.__graspDataMsg.colour="Red"
+            if case == 2:
+                self.__statusbar_cli(StatusBarRequest.FULL,255,255,0,0)
+                self.__graspDataMsg.colour="Yellow"
+            if case == 3:
+                self.__statusbar_cli(StatusBarRequest.FULL,0,0,255,0)
+                self.__graspDataMsg.colour="Blue"
 
             self.__now = rospy.get_rostime()
             self.__last = self.__metalChipLast.imageTime
@@ -105,16 +121,21 @@ class SortingAppNode:
 
             rospy.loginfo("latency")
             rospy.loginfo(latencySec)
+            self.__graspDataMsg.latencyMilliseconds=latencySec
 
             latencyDistance = velocity*latencySec
 
             rospy.loginfo("latency distance")
             rospy.loginfo(latencyDistance)
+            self.__graspDataMsg.latencyDistance=latencyDistance
 
             time = (self.__robotGraspPosDistance - self.__lastPos - latencyDistance)/velocity
 
             rospy.loginfo("calculated time duration")
             rospy.loginfo(time)
+            self.__graspDataMsg.delayTime=time
+
+            self.__grasp_data_pub.publish(self.__graspDataMsg)
 
             rospy.sleep(time)
 

@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS message_generation one_easy_protocol_pkg
 
 catkin_python_setup()
 
+add_message_files(FILES GraspData.msg)
 add_service_files(DIRECTORY srv FILES StartSorting.srv StopSorting.srv StartGraspPlanner.srv StopGraspPlanner.srv PickAndPlace.srv)
 
 generate_messages(DEPENDENCIES std_msgs)
