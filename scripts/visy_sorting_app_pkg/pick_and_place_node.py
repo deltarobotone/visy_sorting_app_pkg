@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 
-from visy_sorting_app_pkg.srv import *
-from one_easy_protocol_pkg.srv import *
+from visy_sorting_app_pkg.srv import PickAndPlace,PickAndPlaceResponse
+from one_easy_protocol_pkg.srv import RobotMove,RobotMoveResponse
+from one_easy_protocol_pkg.srv import RobotLight,RobotLightResponse
+from one_easy_protocol_pkg.srv import RobotExtMotor,RobotExtMotorResponse
+from one_easy_protocol_pkg.srv import RobotGripper,RobotGripperResponse
+from one_easy_protocol_pkg.srv import RobotConnect,RobotConnectResponse
+from one_easy_protocol_pkg.srv import RobotDisconnect,RobotDisconnectResponse
 import rospy
 
 class PickAndPlaceNode:

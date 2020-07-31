@@ -1,9 +1,21 @@
 #!/usr/bin/env python3
 
-from visy_sorting_app_pkg.srv import *
-from visy_neopixel_pkg.srv import *
-from one_easy_protocol_pkg.srv import *
-from visy_detector_pkg.srv import *
+from visy_sorting_app_pkg.srv import StartSorting,StartSortingResponse
+from visy_sorting_app_pkg.srv import StopSorting,StopSortingResponse
+from visy_sorting_app_pkg.srv import StartGraspPlanner,StartGraspPlannerResponse
+from visy_sorting_app_pkg.srv import StopGraspPlanner,StopGraspPlannerResponse
+from visy_sorting_app_pkg.srv import PickAndPlace,PickAndPlaceResponse
+from visy_neopixel_pkg.srv import StatusBar,StatusBarResponse
+from visy_neopixel_pkg.srv import LightRing,LightRingResponse
+from one_easy_protocol_pkg.srv import RobotMove,RobotMoveResponse
+from one_easy_protocol_pkg.srv import RobotLight,RobotLightResponse
+from one_easy_protocol_pkg.srv import RobotExtMotor,RobotExtMotorResponse
+from one_easy_protocol_pkg.srv import RobotGripper,RobotGripperResponse
+from one_easy_protocol_pkg.srv import RobotConnect,RobotConnectResponse
+from one_easy_protocol_pkg.srv import RobotDisconnect,RobotDisconnectResponse
+from visy_detector_pkg.srv import DetectConveyorSystem,DetectConveyorSystemResponse
+from visy_detector_pkg.srv import StartMetalChipDetector,StartMetalChipDetectorResponse
+from visy_detector_pkg.srv import StopMetalChipDetector,StopMetalChipDetectorResponse
 import rospy
 
 class SortingAppNode:
