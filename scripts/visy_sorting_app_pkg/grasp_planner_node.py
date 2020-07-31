@@ -2,10 +2,10 @@
 
 from visy_sorting_app_pkg.srv import StartGraspPlanner,StartGraspPlannerResponse
 from visy_sorting_app_pkg.srv import StopGraspPlanner,StopGraspPlannerResponse
-from visy_sorting_app_pkg.srv import PickAndPlace,PickAndPlaceResponse
+from visy_sorting_app_pkg.srv import PickAndPlace,PickAndPlaceResponse,PickAndPlaceRequest
 from visy_sorting_app_pkg.msg import GraspData
 from visy_detector_pkg.msg import MetalChip
-from visy_neopixel_pkg.srv import StatusBar,StatusBarResponse
+from visy_neopixel_pkg.srv import StatusBar,StatusBarResponse,StatusBarRequest
 import rospy
 import math
 
