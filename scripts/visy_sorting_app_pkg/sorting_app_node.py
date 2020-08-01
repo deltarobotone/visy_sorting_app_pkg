@@ -166,7 +166,7 @@ class SortingAppNode:
         rospy.init_node("sorting_app_node")
         rate = rospy.Rate(10)
         while not rospy.is_shutdown():
-            self.__step()
+            __step()
             rate.sleep()
 
 if __name__ == "__main__":
