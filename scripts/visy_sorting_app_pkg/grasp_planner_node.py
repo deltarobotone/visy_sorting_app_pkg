@@ -154,7 +154,8 @@ class GraspPlannerNode:
             rospy.loginfo("reset")
             self.__calculated = True
 
-    def run(self):
+    @classmethod
+    def run(cls):
         rospy.init_node("grasp_planner_node")
         rospy.spin()
 

@@ -157,7 +157,8 @@ class SortingAppNode:
         return True
 
     #Cyclic main function
-    def __step(self):
+    @classmethod
+    def __step(cls):
         return True
 
     @classmethod

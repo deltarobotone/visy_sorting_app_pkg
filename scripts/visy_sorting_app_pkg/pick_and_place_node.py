@@ -30,7 +30,8 @@ class PickAndPlaceNode:
         return None
     
     #Check services
-    def checkServices(self):
+    @classmethod
+    def checkServices(cls):
         rospy.wait_for_service('ctrl_robot_move')
         rospy.wait_for_service('ctrl_robot_light')
         rospy.wait_for_service('ctrl_robot_extmotor')
@@ -84,8 +85,8 @@ class PickAndPlaceNode:
 
         return PickAndPlaceResponse(req.case)
 
-
-    def run(self):
+    @classmethod
+    def run(cls):
         rospy.init_node("pick_and_place_node")
         rospy.spin()
 
