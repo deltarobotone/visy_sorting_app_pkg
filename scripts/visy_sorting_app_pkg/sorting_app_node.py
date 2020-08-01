@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Sorting Application Node for Vision System."""
 
 from visy_sorting_app_pkg.srv import StartSorting,StartSortingResponse
 from visy_sorting_app_pkg.srv import StopSorting,StopSortingResponse
@@ -21,6 +22,7 @@ import rospy
 class SortingAppNode:
 
     def __init__(self):
+        """Class provides ROS Node to control sorting applicaion using Vision System, Delta-Robot One and conveyor system"""
         self.__start_srv = rospy.Service('start_sorting', StartSorting, self.__startCB)
         self.__stop_srv = rospy.Service('stop_sorting', StopSorting, self.__stopCB)
 
