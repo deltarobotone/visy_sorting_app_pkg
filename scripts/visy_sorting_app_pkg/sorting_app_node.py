@@ -2,20 +2,20 @@
 
 from visy_sorting_app_pkg.srv import StartSorting,StartSortingResponse
 from visy_sorting_app_pkg.srv import StopSorting,StopSortingResponse
-from visy_sorting_app_pkg.srv import StartGraspPlanner,StartGraspPlannerResponse
-from visy_sorting_app_pkg.srv import StopGraspPlanner,StopGraspPlannerResponse
-from visy_sorting_app_pkg.srv import PickAndPlace,PickAndPlaceResponse
-from visy_neopixel_pkg.srv import StatusBar,StatusBarResponse,StatusBarRequest
-from visy_neopixel_pkg.srv import LightRing,LightRingResponse,LightRingRequest
-from one_easy_protocol_pkg.srv import RobotMove,RobotMoveResponse
-from one_easy_protocol_pkg.srv import RobotLight,RobotLightResponse,RobotLightRequest
-from one_easy_protocol_pkg.srv import RobotExtMotor,RobotExtMotorResponse
-from one_easy_protocol_pkg.srv import RobotGripper,RobotGripperResponse
-from one_easy_protocol_pkg.srv import RobotConnect,RobotConnectResponse
-from one_easy_protocol_pkg.srv import RobotDisconnect,RobotDisconnectResponse
-from visy_detector_pkg.srv import DetectConveyorSystem,DetectConveyorSystemResponse
-from visy_detector_pkg.srv import StartMetalChipDetector,StartMetalChipDetectorResponse
-from visy_detector_pkg.srv import StopMetalChipDetector,StopMetalChipDetectorResponse
+from visy_sorting_app_pkg.srv import StartGraspPlanner
+from visy_sorting_app_pkg.srv import StopGraspPlanner
+from visy_sorting_app_pkg.srv import PickAndPlace
+from visy_neopixel_pkg.srv import StatusBar,StatusBarRequest
+from visy_neopixel_pkg.srv import LightRing,LightRingRequest
+from one_easy_protocol_pkg.srv import RobotMove
+from one_easy_protocol_pkg.srv import RobotLight,RobotLightRequest
+from one_easy_protocol_pkg.srv import RobotExtMotor
+from one_easy_protocol_pkg.srv import RobotGripper
+from one_easy_protocol_pkg.srv import RobotConnect
+from one_easy_protocol_pkg.srv import RobotDisconnect
+from visy_detector_pkg.srv import DetectConveyorSystem
+from visy_detector_pkg.srv import StartMetalChipDetector
+from visy_detector_pkg.srv import StopMetalChipDetector
 import rospy
 
 class SortingAppNode:
