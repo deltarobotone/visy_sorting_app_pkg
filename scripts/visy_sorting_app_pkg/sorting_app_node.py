@@ -156,17 +156,11 @@ class SortingAppNode:
         rospy.loginfo("#######################################")
         return True
 
-    #Cyclic main function
-    @classmethod
-    def __step(cls):
-        return True
-
     @classmethod
     def run(cls):
         rospy.init_node("sorting_app_node")
         rate = rospy.Rate(10)
         while not rospy.is_shutdown():
-            __step()
             rate.sleep()
 
 if __name__ == "__main__":
