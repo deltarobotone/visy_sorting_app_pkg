@@ -13,7 +13,7 @@ import rospy
 class PickAndPlaceNode:
 
     def __init__(self):
-        """Class provides ROS Node executes pick and place for metal chips using one ctrl node to sort the chips in the cases of conveyor system"""
+        """Class provides ROS Node executes pick and place for metal chips using one ctrl node to sort the chips in the cases of conveyor system."""
         self.__pick_and_place_srv = rospy.Service('pick_and_place', PickAndPlace, self.__pickandPlaceCB)
         self.__move_cli = rospy.ServiceProxy('ctrl_robot_move',RobotMove)
         self.__light_cli = rospy.ServiceProxy('ctrl_robot_light',RobotLight)

@@ -22,7 +22,7 @@ import rospy
 class SortingAppNode:
 
     def __init__(self):
-        """Class provides ROS Node to control sorting applicaion using Vision System, Delta-Robot One and conveyor system"""
+        """Class provides ROS Node to control sorting applicaion using Vision System, Delta-Robot One and conveyor system."""
         self.__start_srv = rospy.Service('start_sorting', StartSorting, self.__startCB)
         self.__stop_srv = rospy.Service('stop_sorting', StopSorting, self.__stopCB)
 
@@ -53,7 +53,8 @@ class SortingAppNode:
         return None
 
     #Check services
-    def checkServices(self):
+    @classmethod
+    def checkServices(cls):
         rospy.loginfo("check services")
         rospy.loginfo("#######################################")
         rospy.loginfo("move robot service...")
@@ -121,7 +122,7 @@ class SortingAppNode:
         rospy.loginfo("disable robot light...")
         self.__light_cli(RobotLightRequest.OFF,100.0)
         rospy.loginfo("disconnect robot...")
-        res = self.__disconnect_cli("")
+        self.__disconnect_cli("")
         rospy.loginfo("#######################################")
         return StopSortingResponse("sorting application stopped!")
 
@@ -159,7 +160,8 @@ class SortingAppNode:
     def __step(self):
         return True
 
-    def run(self):
+    @classmethod
+    def run(cls):
         rospy.init_node("sorting_app_node")
         rate = rospy.Rate(10)
         while not rospy.is_shutdown():

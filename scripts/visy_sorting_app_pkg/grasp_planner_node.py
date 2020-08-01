@@ -13,7 +13,7 @@ import math
 class GraspPlannerNode:
 
     def __init__(self):
-        """Class provides ROS Node to plan the grasp timing for Delta-Robot One based on metal chip message of metal chip detector node"""
+        """Class provides ROS Node to plan the grasp timing for Delta-Robot One based on metal chip message of metal chip detector node."""
         self.__start_srv = rospy.Service('start_grasp_planner', StartGraspPlanner, self.__startCB)
         self.__stop_srv = rospy.Service('stop_grasp_planner', StopGraspPlanner, self.__stopCB)
         self.__pick_and_place_cli = rospy.ServiceProxy('pick_and_place',PickAndPlace)
