@@ -1,0 +1,8 @@
+<launch>
+
+    <node type="one_ctrl_node.py" pkg="one_easy_protocol_pkg" name="one_ctrl_node" output="screen" respawn="true"/>
+    <node type="pick_and_place_node.py" pkg="visy_sorting_app_pkg" name="pick_and_place_node" output="screen" respawn="true"/>
+    <node type="sorting_app_node.py" pkg="visy_sorting_app_pkg" name="sorting_app_node" output="screen" respawn="true"/>
+    <node type="grasp_planner_node.py" pkg="visy_sorting_app_pkg" name="grasp_planner_node" output="screen" respawn="true"/>
+
+</launch>
