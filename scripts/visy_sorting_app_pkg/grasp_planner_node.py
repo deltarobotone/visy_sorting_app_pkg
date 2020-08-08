@@ -157,7 +157,9 @@ class GraspPlannerNode:
     @classmethod
     def run(cls):
         rospy.init_node("grasp_planner_node")
-        rospy.spin()
+        rate = rospy.Rate(10)
+        while not rospy.is_shutdown():
+            rate.sleep()
 
 if __name__ == "__main__":
     graspPlannerNode = GraspPlannerNode()
