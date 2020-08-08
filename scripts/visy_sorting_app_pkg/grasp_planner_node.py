@@ -101,6 +101,9 @@ class GraspPlannerNode:
             hue = self.__metalChipLast.hue
             self.__graspDataMsg.hue=hue
 
+            rospy.loginfo("hue")
+            rospy.loginfo(hue)
+
             # case 1 red
             if ((hue >= 0 and hue < 10) or (hue <= 180 and hue > 160)): case = 1
             # case 2 yellow

@@ -1,6 +1,6 @@
 uint8 detectedMetalChips
 float32 velocity
-uint32 lastDetectedPosition
+float32 lastDetectedPosition
 uint32 hue
 string colour
 float32 latencyMilliseconds
