@@ -17,6 +17,7 @@ from one_easy_protocol_pkg.srv import RobotDisconnect
 from visy_detector_pkg.srv import DetectConveyorSystem
 from visy_detector_pkg.srv import StartMetalChipDetector
 from visy_detector_pkg.srv import StopMetalChipDetector
+from visy_detector_pkg.msg import ConveyorSystem
 import rospy
 
 class SortingAppNode:
@@ -45,8 +46,11 @@ class SortingAppNode:
 
         self.__pick_and_place_cli = rospy.ServiceProxy('pick_and_place',PickAndPlace)
 
+        self.__conveyor_system_sub = rospy.Subscriber('conveyor_system_rect',ConveyorSystem,self.__conveyorSystemCB)
+
         self.__start = False
         self.__startUpState = False
+        self.__startAppState = False
         self.__serviceState = False
         self.__ctrl_state = 0
 
@@ -92,6 +96,7 @@ class SortingAppNode:
         self.__start = False
         self.__startUpState = False
         self.__serviceState = False
+        self.__startAppState = False
         self.__ctrl_state = 0
         return True
 
@@ -107,6 +112,7 @@ class SortingAppNode:
     def __stopCB(self,req):
         self.__start = False
         self.__startUpState = False
+        self.__startAppState = False
         rospy.loginfo("system shutdown")
         rospy.loginfo("#######################################")
         rospy.loginfo("stop grasp planner...")
@@ -145,18 +151,32 @@ class SortingAppNode:
         self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,0,0,0,255)
         rospy.loginfo("detect conveyor system...")
         autodetected = self.__detect_conveyor_cli("")
+        rospy.loginfo("start metal chip detector...")
+        self.__start_detector_cli("")
+        rospy.loginfo("#######################################")
+        self.__startUpState = True
+        return True
+
+    #StartApp
+    def __startApp(self,autodetected):
+        rospy.loginfo("start app")
+        rospy.loginfo("#######################################")
+        rospy.loginfo("start grasp planner...")
+        self.__start_grasp_planner_cli("")
         if autodetected == True:
             self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,0,255,0,0)
         else:
             self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,255,255,0,0)
-        rospy.loginfo("start metal chip detector...")
-        self.__start_detector_cli("")
-        rospy.loginfo("start grasp planner...")
-        self.__start_grasp_planner_cli("")
         rospy.loginfo("start conveyor system...")
         self.__extmotor_cli(True,200.0)
         self.__light_cli(RobotLightRequest.WHITE,100.0)
         rospy.loginfo("#######################################")
+        self.__startAppState = True
+    return True
+
+    def self.__conveyorSystemCB(self,data):
+        if self.__startAppState == False:
+            self.__startApp(data.autodetected)
         return True
 
     @classmethod
