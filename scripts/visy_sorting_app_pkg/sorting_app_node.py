@@ -144,12 +144,15 @@ class SortingAppNode:
         rospy.loginfo("enable status bar...")
         self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,0,0,0,255)
         rospy.loginfo("detect conveyor system...")
-        self.__detect_conveyor_cli("")
+        autodetected = self.__detect_conveyor_cli("")
+        if autodetected == True:
+            self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,0,255,0,0)
+        else:
+            self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,255,255,0,0)
         rospy.loginfo("start metal chip detector...")
         self.__start_detector_cli("")
         rospy.loginfo("start grasp planner...")
         self.__start_grasp_planner_cli("")
-        self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,0,255,0,0)
         rospy.loginfo("start conveyor system...")
         self.__extmotor_cli(True,200.0)
         self.__light_cli(RobotLightRequest.WHITE,100.0)
