@@ -172,9 +172,9 @@ class SortingAppNode:
         self.__light_cli(RobotLightRequest.WHITE,100.0)
         rospy.loginfo("#######################################")
         self.__startAppState = True
-    return True
+        return True
 
-    def self.__conveyorSystemCB(self,data):
+    def __conveyorSystemCB(self,data):
         if self.__startAppState == False:
             self.__startApp(data.autodetected)
         return True
