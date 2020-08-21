@@ -34,7 +34,6 @@ class GraspPlannerNode:
     def __reset(self):
         self.__metalChips = []
         self.__metalChipLast = MetalChip()
-        self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,0,255,0,0)
 
     #Start
     def __startCB(self,req):
@@ -155,6 +154,7 @@ class GraspPlannerNode:
 
             self.__reset()
             rospy.loginfo("reset")
+            self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,0,255,0,0)
             self.__calculated = True
 
     @classmethod

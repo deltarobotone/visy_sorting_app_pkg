@@ -163,10 +163,8 @@ class SortingAppNode:
         self.__start_detector_cli("")
         rospy.loginfo(autodetected)
         if autodetected == True:
-            rospy.loginfo("green")
             self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,0,255,0,0)
         else:
-            rospy.loginfo("yellow")
             self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,255,255,0,0)
         rospy.loginfo("start grasp planner...")
         self.__start_grasp_planner_cli("")
