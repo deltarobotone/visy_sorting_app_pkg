@@ -28,7 +28,7 @@ class PickAndPlaceNode:
         self.__posConveyor = [0.0, -22.0, 118.0]
         self.__posHome = [0.0, 0.0, 70.0]
         return None
-    
+
     #Check services
     @classmethod
     def checkServices(cls):
