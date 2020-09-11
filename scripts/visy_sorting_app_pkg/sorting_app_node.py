@@ -6,8 +6,9 @@ from visy_sorting_app_pkg.srv import StopSorting,StopSortingResponse
 from visy_sorting_app_pkg.srv import StartGraspPlanner
 from visy_sorting_app_pkg.srv import StopGraspPlanner
 from visy_sorting_app_pkg.srv import PickAndPlace
-from visy_neopixel_pkg.srv import StatusBar,StatusBarRequest
-from visy_neopixel_pkg.srv import LightRing,LightRingRequest
+from visy_neopixel_pkg.srv import LightCtrl,LightCtrlRequest
+from visy_neopixel_pkg.srv import PixelCtrl,PixelCtrlRequest
+from visy_neopixel_pkg.msg import Neopixel
 from one_easy_protocol_pkg.srv import RobotMove
 from one_easy_protocol_pkg.srv import RobotLight,RobotLightRequest
 from one_easy_protocol_pkg.srv import RobotExtMotor
@@ -34,8 +35,11 @@ class SortingAppNode:
         self.__connect_cli = rospy.ServiceProxy('ctrl_robot_connect',RobotConnect)
         self.__disconnect_cli = rospy.ServiceProxy('ctrl_robot_disconnect',RobotDisconnect)
 
-        self.__lightring_cli = rospy.ServiceProxy('ctrl_light_ring',LightRing)
-        self.__statusbar_cli = rospy.ServiceProxy('ctrl_status_bar',StatusBar)
+        self.__lightring_cli = rospy.ServiceProxy('/light_ring_node/light_ctrl',LightCtrl)
+        self.__statusbar_cli = rospy.ServiceProxy('/status_bar_node/light_ctrl',LightCtrl)
+
+        self.__lightringpixel_cli = rospy.ServiceProxy('/light_ring_node/pixel_ctrl',PixelCtrl)
+        self.__statusbarpixel_cli = rospy.ServiceProxy('/status_bar_node/pixel_ctrl',PixelCtrl)
 
         self.__detect_conveyor_cli = rospy.ServiceProxy('/detect_conveyor_system',DetectConveyorSystem)
         self.__start_detector_cli = rospy.ServiceProxy('/start_metalchip_detector',StartMetalChipDetector)
@@ -53,14 +57,22 @@ class SortingAppNode:
         self.__startAppState = False
         self.__serviceState = False
         self.__ctrl_state = 0
-
         return None
 
     #Check services
-    @classmethod
-    def checkServices(cls):
+    def checkServices(self):
         rospy.loginfo("check services")
         rospy.loginfo("#######################################")
+        rospy.loginfo("status bar services...")
+        rospy.wait_for_service('/status_bar_node/light_ctrl')
+        rospy.wait_for_service('/status_bar_node/pixel_ctrl')
+        self.__statusbar_cli(LightCtrlRequest.FULL,Neopixel(0,0,0,0))
+        self.__statusbarpixel_cli(1,Neopixel(0,0,255,0))
+        rospy.loginfo("light ring services...")
+        rospy.wait_for_service('/light_ring_node/light_ctrl')
+        rospy.wait_for_service('/light_ring_node/pixel_ctrl')
+        self.__lightring_cli(LightCtrlRequest.FULL,Neopixel(0,0,0,0))
+        self.__statusbarpixel_cli(2,Neopixel(0,0,255,0))
         rospy.loginfo("move robot service...")
         rospy.wait_for_service('ctrl_robot_move')
         rospy.loginfo("robot light service...")
@@ -69,26 +81,35 @@ class SortingAppNode:
         rospy.wait_for_service('ctrl_robot_extmotor')
         rospy.loginfo("robot gripper service...")
         rospy.wait_for_service('ctrl_robot_gripper')
+        self.__statusbarpixel_cli(3,Neopixel(0,0,255,0))
         rospy.loginfo("connect robot service...")
         rospy.wait_for_service('ctrl_robot_connect')
         rospy.loginfo("disconnect robot service...")
         rospy.wait_for_service('ctrl_robot_disconnect')
-        rospy.loginfo("light ring service...")
-        rospy.wait_for_service('ctrl_light_ring')
-        rospy.loginfo("status bar service...")
-        rospy.wait_for_service('ctrl_status_bar')
+        self.__statusbarpixel_cli(4,Neopixel(0,0,255,0))
         rospy.loginfo("detect conveyor system service...")
         rospy.wait_for_service('/detect_conveyor_system')
+        self.__statusbarpixel_cli(5,Neopixel(0,0,255,0))
         rospy.loginfo("metalchip detector services...")
         rospy.wait_for_service('/start_metalchip_detector')
         rospy.wait_for_service('/stop_metalchip_detector')
+        self.__statusbarpixel_cli(6,Neopixel(0,0,255,0))
         rospy.loginfo("pick and place service...")
         rospy.wait_for_service('pick_and_place')
+        self.__statusbarpixel_cli(7,Neopixel(0,0,255,0))
         rospy.loginfo("grasp planner services...")
         rospy.wait_for_service('start_grasp_planner')
         rospy.wait_for_service('stop_grasp_planner')
+        self.__statusbarpixel_cli(8,Neopixel(0,0,255,0))
         rospy.loginfo("...ready!")
         rospy.loginfo("#######################################")
+        return True
+
+    #LightRing start
+    def lightRingStart(self):
+        for i in range(12):
+            self.__lightringpixel_cli(i+1,Neopixel(0,0,0,255))
+            rospy.sleep(1)
         return True
 
     #Reset
@@ -122,9 +143,9 @@ class SortingAppNode:
         rospy.loginfo("stop conveyor system...")
         self.__extmotor_cli(False,100.0)
         rospy.loginfo("disable light ring...")
-        self.__lightring_cli(LightRingRequest.FULL,0,0,0,0)
+        self.__lightring_cli(LightCtrlRequest.FULL,Neopixel(0,0,0,0))
         rospy.loginfo("disable status bar...")
-        self.__statusbar_cli(StatusBarRequest.FULL,0,0,0,0)
+        self.__statusbar_cli(LightCtrlRequest.FULL,Neopixel(0,0,0,0))
         rospy.loginfo("disable robot light...")
         self.__light_cli(RobotLightRequest.OFF,100.0)
         rospy.loginfo("disconnect robot...")
@@ -146,9 +167,9 @@ class SortingAppNode:
         res = self.__light_cli(RobotLightRequest.WHITE,100.0)
         rospy.loginfo(res.res)
         rospy.loginfo("enable light ring...")
-        self.__lightring_cli(LightRingRequest.FULL,0,0,0,5)
+        self.__lightring_cli(LightCtrlRequest.FULL,Neopixel(0,0,0,5))
         rospy.loginfo("enable status bar...")
-        self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,0,0,0,255)
+        self.__statusbar_cli(LightCtrlRequest.SPIN_DOUBLE_TOP,Neopixel(0,0,0,255))
         rospy.loginfo("detect conveyor system...")
         autodetected = self.__detect_conveyor_cli("")
         rospy.loginfo("#######################################")
@@ -163,9 +184,9 @@ class SortingAppNode:
         self.__start_detector_cli("")
         rospy.loginfo(autodetected)
         if autodetected == True:
-            self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,0,255,0,0)
+            self.__statusbar_cli(LightCtrlRequest.SPIN_DOUBLE_TOP,Neopixel(0,255,0,0))
         else:
-            self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,255,255,0,0)
+            self.__statusbar_cli(LightCtrlRequest.SPIN_DOUBLE_TOP,Neopixel(255,255,0,0))
         rospy.loginfo("start grasp planner...")
         self.__start_grasp_planner_cli("")
         rospy.loginfo("start conveyor system...")
@@ -190,4 +211,5 @@ class SortingAppNode:
 if __name__ == "__main__":
     sortingAppNode = SortingAppNode()
     sortingAppNode.checkServices()
+    sortingAppNode.lightRingStart()
     sortingAppNode.run()
