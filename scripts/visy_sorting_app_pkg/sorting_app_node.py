@@ -134,7 +134,7 @@ class SortingAppNode:
         self.__lightringpixel_cli(6,Neopixel(0,0,0,255),False)
         self.__lightringpixel_cli(8,Neopixel(0,0,0,255),False)
         rospy.sleep(0.3)
-        self.__lightringpixel_cli(7,Neopixel(0,255,0,0),False)
+        self.__lightringpixel_cli(1,Neopixel(0,255,0,0),False)
         self.__lightringpixel_cli(7,Neopixel(0,0,255,0),False)
         rospy.sleep(0.3)
         return True
