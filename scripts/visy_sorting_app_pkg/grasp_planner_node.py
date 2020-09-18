@@ -6,7 +6,9 @@ from visy_sorting_app_pkg.srv import StopGraspPlanner,StopGraspPlannerResponse
 from visy_sorting_app_pkg.srv import PickAndPlace,PickAndPlaceRequest
 from visy_sorting_app_pkg.msg import GraspData
 from visy_detector_pkg.msg import MetalChip
-from visy_neopixel_pkg.srv import StatusBar,StatusBarRequest
+from visy_neopixel_pkg.srv import LightCtrl,LightCtrlRequest
+from visy_neopixel_pkg.srv import PixelCtrl
+from visy_neopixel_pkg.msg import Neopixel
 import rospy
 import math
 
@@ -14,21 +16,39 @@ class GraspPlannerNode:
 
     def __init__(self):
         """Class provides ROS Node to plan the grasp timing for Delta-Robot One based on metal chip message of metal chip detector node."""
+        rospy.init_node("grasp_planner_node")
         self.__start_srv = rospy.Service('start_grasp_planner', StartGraspPlanner, self.__startCB)
         self.__stop_srv = rospy.Service('stop_grasp_planner', StopGraspPlanner, self.__stopCB)
         self.__pick_and_place_cli = rospy.ServiceProxy('pick_and_place',PickAndPlace)
-        self.__statusbar_cli = rospy.ServiceProxy('ctrl_status_bar',StatusBar)
+        self.__statusbar_cli = rospy.ServiceProxy('/status_bar_node/light_ctrl',LightCtrl)
         self.__grasp_data_pub = rospy.Publisher('grasp_data', GraspData, queue_size=1)
-
-        rospy.Subscriber("/metal_chip", MetalChip, self.__metalChipCB, queue_size=1)
+        self.__metal_chip_sub = rospy.Subscriber("/metal_chip", MetalChip, self.__metalChipCB, queue_size=1)
 
         self.__graspDataMsg = GraspData()
         self.__start = False
         self.__calculated = False
         self.__metalChips = []
         self.__metalChipLast = MetalChip()
-        self.__robotGraspPosDistance = 590 #Pixels
+        self.__robotGraspPosDistance = 0
+        self.__roi_min = 0
+        self.__roi_max = 0
+        self.__case_1_hue_min = 0
+        self.__case_1_hue_max = 0
+        self.__case_2_hue_min = 0
+        self.__case_2_hue_max = 0
+        self.__case_3_hue_min = 0
+        self.__case_3_hue_max = 0
         return None
+
+    def __getParams(self):
+        try:
+            self.__robotGraspPosDistance = rospy.get_param('~robot_distance') #Pixels
+            self.__roi_min = rospy.get_param('~roi_min') #Pixels
+            self.__roi_max = rospy.get_param('~roi_max') #Pixels
+            return True
+        except Exception:
+            rospy.logerr("get params failed at grasp_planner_node")
+            return False
 
     #Reset
     def __reset(self):
@@ -51,7 +71,7 @@ class GraspPlannerNode:
 
         pos = math.sqrt(pow(metalChipMsg.pos[0],2)+pow(metalChipMsg.pos[1],2))
 
-        if self.__start == True and pos < 300 and pos > 50:
+        if self.__start == True and pos < self.__roi_max and pos > self.__roi_min:
 
             self.__lastPos = math.sqrt(pow(self.__metalChipLast.pos[0],2)+pow(self.__metalChipLast.pos[1],2))
 
@@ -63,7 +83,7 @@ class GraspPlannerNode:
                 rospy.loginfo("new chip detected")
                 self.__reset()
 
-        if pos >= 300 and self.__calculated == False:
+        if pos >= self.__roi_max and self.__calculated == False:
             velocityArray = []
             metalChip1 = MetalChip()
             for metalChip2 in self.__metalChips:
@@ -81,20 +101,19 @@ class GraspPlannerNode:
             for velTmp in velocityArray:
                 velocity = velocity + velTmp
 
-            rospy.loginfo("detected metal chips")
-            rospy.loginfo(len(self.__metalChips))
-            self.__graspDataMsg.detectedMetalChips=len(self.__metalChips)
-
             velocity = velocity/(len(velocityArray))
-
-            rospy.loginfo("last chip position")
-            rospy.loginfo(self.__lastPos)
-            self.__graspDataMsg.lastDetectedPosition=self.__lastPos
 
             rospy.loginfo("velocity")
             rospy.loginfo(velocity)
             self.__graspDataMsg.velocity=velocity
 
+            rospy.loginfo("detected metal chips")
+            rospy.loginfo(len(self.__metalChips))
+            self.__graspDataMsg.detectedMetalChips=len(self.__metalChips)
+
+            rospy.loginfo("last chip position")
+            rospy.loginfo(self.__lastPos)
+            self.__graspDataMsg.lastDetectedPosition=self.__lastPos
 
             case = 0
             hue = self.__metalChipLast.hue
@@ -111,13 +130,13 @@ class GraspPlannerNode:
             if (hue >= 100 and hue < 130): case = 3
 
             if case == 1:
-                self.__statusbar_cli(StatusBarRequest.FULL,255,0,0,0)
+                self.__statusbar_cli(LightCtrlRequest.FULL,Neopixel(255,0,0,0))
                 self.__graspDataMsg.colour="Red"
             if case == 2:
-                self.__statusbar_cli(StatusBarRequest.FULL,255,255,0,0)
+                self.__statusbar_cli(LightCtrlRequest.FULL,Neopixel(255,255,0,0))
                 self.__graspDataMsg.colour="Yellow"
             if case == 3:
-                self.__statusbar_cli(StatusBarRequest.FULL,0,0,255,0)
+                self.__statusbar_cli(LightCtrlRequest.FULL,Neopixel(0,0,255,0))
                 self.__graspDataMsg.colour="Blue"
 
             self.__now = rospy.get_rostime()
@@ -154,15 +173,16 @@ class GraspPlannerNode:
 
             self.__reset()
             rospy.loginfo("reset")
-            self.__statusbar_cli(StatusBarRequest.FLOW_DOUBLE_TOP,0,255,0,0)
+            self.__statusbar_cli(LightCtrlRequest.SPIN_DOUBLE_TOP,Neopixel(0,255,0,0))
             self.__calculated = True
 
-    @classmethod
-    def run(cls):
-        rospy.init_node("grasp_planner_node")
+    def run(self):
         rate = rospy.Rate(10)
-        while not rospy.is_shutdown():
-            rate.sleep()
+        if self.__getParams() == True:
+            while not rospy.is_shutdown():
+                rate.sleep()
+        else:
+            rospy.logerr("failed to start grasp_planner_node")
 
 if __name__ == "__main__":
     graspPlannerNode = GraspPlannerNode()

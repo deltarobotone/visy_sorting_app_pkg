@@ -14,6 +14,7 @@ class PickAndPlaceNode:
 
     def __init__(self):
         """Class provides ROS Node executes pick and place for metal chips using one ctrl node to sort the chips in the cases of conveyor system."""
+        rospy.init_node("pick_and_place_node")
         self.__pick_and_place_srv = rospy.Service('pick_and_place', PickAndPlace, self.__pickandPlaceCB)
         self.__move_cli = rospy.ServiceProxy('ctrl_robot_move',RobotMove)
         self.__light_cli = rospy.ServiceProxy('ctrl_robot_light',RobotLight)
@@ -42,52 +43,49 @@ class PickAndPlaceNode:
 
     #Pick and place
     def __pickandPlaceCB(self,req):
-        if self.checkServices():
-            self.__extmotor_cli(False,100.0)
-            self.__move_cli(self.__posHome[0],self.__posHome[1],self.__posHome[2],self.__robotVel)
+        self.__extmotor_cli(False,100.0)
+        self.__move_cli(self.__posHome[0],self.__posHome[1],self.__posHome[2],self.__robotVel)
+        self.__gripper_cli(False)
+
+        if req.case == req.CASE_1: self.__light_cli(RobotLightRequest.RED,100.0)
+        if req.case == req.CASE_2: self.__light_cli(RobotLightRequest.YELLOW,100.0)
+        if req.case == req.CASE_3: self.__light_cli(RobotLightRequest.BLUE,100.0)
+
+        rospy.sleep(0.5)
+
+        self.__move_cli(self.__posConveyor[0],self.__posConveyor[1],self.__posConveyor[2]-10.0,self.__robotVel)
+        rospy.sleep(0.5)
+        self.__move_cli(self.__posConveyor[0],self.__posConveyor[1],self.__posConveyor[2],self.__robotVel)
+        self.__gripper_cli(True)
+        rospy.sleep(0.5)
+        self.__move_cli(self.__posConveyor[0],self.__posConveyor[1],self.__posConveyor[2]-10.0,self.__robotVel)
+        self.__move_cli(self.__posHome[0],self.__posHome[1],self.__posHome[2],self.__robotVel)
+
+        if req.case == req.CASE_1:
+            self.__move_cli(self.__posCase1[0],self.__posCase1[1],self.__posCase1[2]-10.0,self.__robotVel)
+            self.__move_cli(self.__posCase1[0],self.__posCase1[1],self.__posCase1[2],self.__robotVel)
             self.__gripper_cli(False)
+            self.__move_cli(self.__posCase1[0],self.__posCase1[1],self.__posCase1[2]-10.0,self.__robotVel)
+        if req.case == req.CASE_2:
+            self.__move_cli(self.__posCase2[0],self.__posCase2[1],self.__posCase2[2]-10.0,self.__robotVel)
+            self.__move_cli(self.__posCase2[0],self.__posCase2[1],self.__posCase2[2],self.__robotVel)
+            self.__gripper_cli(False)
+            self.__move_cli(self.__posCase2[0],self.__posCase2[1],self.__posCase2[2]-10.0,self.__robotVel)
+        if req.case == req.CASE_3:
+            self.__move_cli(self.__posCase3[0],self.__posCase3[1],self.__posCase3[2]-10.0,self.__robotVel)
+            self.__move_cli(self.__posCase3[0],self.__posCase3[1],self.__posCase3[2],self.__robotVel)
+            self.__gripper_cli(False)
+            self.__move_cli(self.__posCase3[0],self.__posCase3[1],self.__posCase3[2]-10.0,self.__robotVel)
 
-            if req.case == req.CASE_1: self.__light_cli(RobotLightRequest.RED,100.0)
-            if req.case == req.CASE_2: self.__light_cli(RobotLightRequest.YELLOW,100.0)
-            if req.case == req.CASE_3: self.__light_cli(RobotLightRequest.BLUE,100.0)
-
-            rospy.sleep(0.5)
-
-            self.__move_cli(self.__posConveyor[0],self.__posConveyor[1],self.__posConveyor[2]-10.0,self.__robotVel)
-            rospy.sleep(0.5)
-            self.__move_cli(self.__posConveyor[0],self.__posConveyor[1],self.__posConveyor[2],self.__robotVel)
-            self.__gripper_cli(True)
-            rospy.sleep(0.5)
-            self.__move_cli(self.__posConveyor[0],self.__posConveyor[1],self.__posConveyor[2]-10.0,self.__robotVel)
-
-            self.__move_cli(self.__posHome[0],self.__posHome[1],self.__posHome[2],self.__robotVel)
-
-            if req.case == req.CASE_1:
-                self.__move_cli(self.__posCase1[0],self.__posCase1[1],self.__posCase1[2]-10.0,self.__robotVel)
-                self.__move_cli(self.__posCase1[0],self.__posCase1[1],self.__posCase1[2],self.__robotVel)
-                self.__gripper_cli(False)
-                self.__move_cli(self.__posCase1[0],self.__posCase1[1],self.__posCase1[2]-10.0,self.__robotVel)
-            if req.case == req.CASE_2:
-                self.__move_cli(self.__posCase2[0],self.__posCase2[1],self.__posCase2[2]-10.0,self.__robotVel)
-                self.__move_cli(self.__posCase2[0],self.__posCase2[1],self.__posCase2[2],self.__robotVel)
-                self.__gripper_cli(False)
-                self.__move_cli(self.__posCase2[0],self.__posCase2[1],self.__posCase2[2]-10.0,self.__robotVel)
-            if req.case == req.CASE_3:
-                self.__move_cli(self.__posCase3[0],self.__posCase3[1],self.__posCase3[2]-10.0,self.__robotVel)
-                self.__move_cli(self.__posCase3[0],self.__posCase3[1],self.__posCase3[2],self.__robotVel)
-                self.__gripper_cli(False)
-                self.__move_cli(self.__posCase3[0],self.__posCase3[1],self.__posCase3[2]-10.0,self.__robotVel)
-
-            self.__light_cli(RobotLightRequest.WHITE,100.0)
-            rospy.sleep(0.5)
-            self.__move_cli(self.__posHome[0],self.__posHome[1],self.__posHome[2],self.__robotVel)
-            self.__extmotor_cli(True,200.0)
+        self.__light_cli(RobotLightRequest.WHITE,100.0)
+        rospy.sleep(0.5)
+        self.__move_cli(self.__posHome[0],self.__posHome[1],self.__posHome[2],self.__robotVel)
+        self.__extmotor_cli(True,200.0)
 
         return PickAndPlaceResponse(req.case)
 
     @classmethod
     def run(cls):
-        rospy.init_node("pick_and_place_node")
         rate = rospy.Rate(10)
         while not rospy.is_shutdown():
             rate.sleep()
