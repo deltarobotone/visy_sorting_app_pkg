@@ -194,9 +194,7 @@ class SortingAppNode:
         res = self.__light_cli(RobotLightRequest.WHITE,100.0)
         rospy.loginfo(res.res)
         rospy.loginfo("enable light ring...")
-        self.__lightring_cli(LightCtrlRequest.FULL,Neopixel(0,0,0,255))
-        rospy.loginfo("enable status bar...")
-        self.__statusbar_cli(LightCtrlRequest.SPIN_DOUBLE_TOP,Neopixel(0,0,0,255))
+        self.__lightring_cli(LightCtrlRequest.FULL,Neopixel(0,0,0,100))
         rospy.loginfo("detect conveyor system...")
         goal = DetectConveyorGoal()
         goal.loops = 10
@@ -210,10 +208,6 @@ class SortingAppNode:
 
     def __callback_done(self, state, result):
         rospy.loginfo("Action server is done. State: %s, result: %s" % (str(state), str(result)))
-        if result.detected == True:
-            self.__statusbar_cli(LightCtrlRequest.SPIN_DOUBLE_TOP,Neopixel(0,255,0,0))
-        else:
-            self.__statusbar_cli(LightCtrlRequest.SPIN_DOUBLE_TOP,Neopixel(255,255,0,0))
         self.__startApp()
 
     def __callback_feedback(self, feedback):
