@@ -194,7 +194,7 @@ class SortingAppNode:
         res = self.__light_cli(RobotLightRequest.WHITE,100.0)
         rospy.loginfo(res.res)
         rospy.loginfo("enable light ring...")
-        self.__lightring_cli(LightCtrlRequest.FULL,Neopixel(0,0,0,5))
+        self.__lightring_cli(LightCtrlRequest.FULL,Neopixel(0,0,0,1))
         rospy.loginfo("detect conveyor system...")
         goal = DetectConveyorGoal()
         goal.loops = 10

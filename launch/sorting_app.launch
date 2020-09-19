@@ -5,7 +5,7 @@
     <node type="sorting_app_node.py" pkg="visy_sorting_app_pkg" name="sorting_app_node" output="screen" />
 
     <node type="grasp_planner_node.py" pkg="visy_sorting_app_pkg" name="grasp_planner_node" output="screen">
-      <param name="robot_distance" value="590"/>
+      <param name="robot_distance" value="580"/>
       <param name="roi_min" value="50"/>
       <param name="roi_max" value="300"/>
     </node>
