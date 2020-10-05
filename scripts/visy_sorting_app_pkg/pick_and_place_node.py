@@ -6,8 +6,6 @@ from one_easy_protocol_pkg.srv import RobotMove
 from one_easy_protocol_pkg.srv import RobotLight,RobotLightRequest
 from one_easy_protocol_pkg.srv import RobotExtMotor
 from one_easy_protocol_pkg.srv import RobotGripper
-from one_easy_protocol_pkg.srv import RobotConnect
-from one_easy_protocol_pkg.srv import RobotDisconnect
 import rospy
 
 class PickAndPlaceNode:
@@ -15,13 +13,16 @@ class PickAndPlaceNode:
     def __init__(self):
         """Class provides ROS Node executes pick and place for metal chips using one ctrl node to sort the chips in the cases of conveyor system."""
         rospy.init_node("pick_and_place_node")
+        #Service to start the pick and place routine to sort the metal chips into a specific case of conveyor system.
         self.__pick_and_place_srv = rospy.Service('pick_and_place', PickAndPlace, self.__pickandPlaceCB)
+        #Client to move robot for pick and place.
         self.__move_cli = rospy.ServiceProxy('ctrl_robot_move',RobotMove)
+        #Client to change robot light for pick and place.
         self.__light_cli = rospy.ServiceProxy('ctrl_robot_light',RobotLight)
+        #Client to start and stop the conveyor system for successfull grasping.
         self.__extmotor_cli = rospy.ServiceProxy('ctrl_robot_extmotor',RobotExtMotor)
+        #Clinet to control robot gripper for pick and place.
         self.__gripper_cli = rospy.ServiceProxy('ctrl_robot_gripper',RobotGripper)
-        self.__connect_cli = rospy.ServiceProxy('ctrl_robot_connect',RobotConnect)
-        self.__disconnect_cli = rospy.ServiceProxy('ctrl_robot_disconnect',RobotDisconnect)
         self.__robotVel = 90.0
         self.__posCase1 = [25.0, 25.0, 100.0]
         self.__posCase2 = [0.0, 25.0, 100.0]
@@ -37,8 +38,6 @@ class PickAndPlaceNode:
         rospy.wait_for_service('ctrl_robot_light')
         rospy.wait_for_service('ctrl_robot_extmotor')
         rospy.wait_for_service('ctrl_robot_gripper')
-        rospy.wait_for_service('ctrl_robot_connect')
-        rospy.wait_for_service('ctrl_robot_disconnect')
         return True
 
     #Pick and place

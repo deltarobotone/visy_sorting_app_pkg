@@ -17,11 +17,17 @@ class GraspPlannerNode:
     def __init__(self):
         """Class provides ROS Node to plan the grasp timing for Delta-Robot One based on metal chip message of metal chip detector node."""
         rospy.init_node("grasp_planner_node")
+        #Service starts the grasp planner. This node is waiting for detected metal chips.
         self.__start_srv = rospy.Service('start_grasp_planner', StartGraspPlanner, self.__startCB)
+        #Service stops the grasp planner.
         self.__stop_srv = rospy.Service('stop_grasp_planner', StopGraspPlanner, self.__stopCB)
+        #Client to call the pick and place service at the right time after a grasp was detected.
         self.__pick_and_place_cli = rospy.ServiceProxy('pick_and_place',PickAndPlace)
+        #Client to inform user about detection state (spin green) or detetcted grasp (full light in red, blue or yellow).
         self.__statusbar_cli = rospy.ServiceProxy('/status_bar_node/light_ctrl',LightCtrl)
+        #Publishes grasp data including the time until grasp, colour of chip, number of detetcted chips, latency, velocity, last chip position, etc.
         self.__grasp_data_pub = rospy.Publisher('grasp_data', GraspData, queue_size=1)
+        #Subscribes metal chip message for grasp time calculation using position, timestamps and colour.
         self.__metal_chip_sub = rospy.Subscriber("/metal_chip", MetalChip, self.__metalChipCB, queue_size=1)
 
         self.__graspDataMsg = GraspData()
@@ -42,8 +48,11 @@ class GraspPlannerNode:
 
     def __getParams(self):
         try:
+            #Distance to robot in pixel.
             self.__robotGraspPosDistance = rospy.get_param('~robot_distance') #Pixels
+            #Pixelposition where the detector uses the first metal chip data if it is detected.
             self.__roi_min = rospy.get_param('~roi_min') #Pixels
+            #Pixelposition where the detector uses the last metal chip data if it is detected.
             self.__roi_max = rospy.get_param('~roi_max') #Pixels
             return True
         except Exception:

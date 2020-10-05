@@ -7,7 +7,6 @@ from visy_sorting_app_pkg.srv import StartSorting,StartSortingResponse
 from visy_sorting_app_pkg.srv import StopSorting,StopSortingResponse
 from visy_sorting_app_pkg.srv import StartGraspPlanner
 from visy_sorting_app_pkg.srv import StopGraspPlanner
-from visy_sorting_app_pkg.srv import PickAndPlace
 from visy_neopixel_pkg.srv import LightCtrl,LightCtrlRequest
 from visy_neopixel_pkg.srv import PixelCtrl
 from visy_neopixel_pkg.msg import Neopixel
@@ -26,31 +25,40 @@ class SortingAppNode:
     def __init__(self):
         """Class provides ROS Node to control sorting applicaion using Vision System, Delta-Robot One and conveyor system."""
         rospy.init_node("sorting_app_node")
+        #Service to start sorting application for metal chips including Delta-Robot One, conveyor system and vision system.
         self.__start_srv = rospy.Service('start_sorting', StartSorting, self.__startCB)
+        #Service to stop sorting application for metal chips.
         self.__stop_srv = rospy.Service('stop_sorting', StopSorting, self.__stopCB)
-
+        #Client to move robot for sorting app.
         self.__move_cli = rospy.ServiceProxy('ctrl_robot_move',RobotMove)
+        #Client to control robot light for sorting app.
         self.__light_cli = rospy.ServiceProxy('ctrl_robot_light',RobotLight)
+        #Client to start and stop conveyor system.
         self.__extmotor_cli = rospy.ServiceProxy('ctrl_robot_extmotor',RobotExtMotor)
+        #Client to control robot gripper.
         self.__gripper_cli = rospy.ServiceProxy('ctrl_robot_gripper',RobotGripper)
+        #Client to connect robot.
         self.__connect_cli = rospy.ServiceProxy('ctrl_robot_connect',RobotConnect)
+        #Client to disconnect robot.
         self.__disconnect_cli = rospy.ServiceProxy('ctrl_robot_disconnect',RobotDisconnect)
-
+        #Client to control visy light ring. Activate light while detecting.
         self.__lightring_cli = rospy.ServiceProxy('/light_ring_node/light_ctrl',LightCtrl)
+        #Client to control visy status bar.
         self.__statusbar_cli = rospy.ServiceProxy('/status_bar_node/light_ctrl',LightCtrl)
-
+        #Client to control pixel of visy light ring for boot routine.
         self.__lightringpixel_cli = rospy.ServiceProxy('/light_ring_node/pixel_ctrl',PixelCtrl)
+        #Client to control pixel of visy status bar for boot routine.
         self.__statusbarpixel_cli = rospy.ServiceProxy('/status_bar_node/pixel_ctrl',PixelCtrl)
-
+        #Client to start conveyor system detetor. Action client for non blocking services.
         self.__detect_conveyor_cli = actionlib.SimpleActionClient('/detect_conveyor', DetectConveyorAction)
-
+        #Client to start metal chip detector.
         self.__start_detector_cli = rospy.ServiceProxy('/start_metalchip_detector',StartMetalChipDetector)
+        #Client to stop metal chip detector
         self.__stop_detector_cli = rospy.ServiceProxy('/stop_metalchip_detector',StopMetalChipDetector)
-
+        #Client to start grasp planner.
         self.__start_grasp_planner_cli = rospy.ServiceProxy('start_grasp_planner',StartGraspPlanner)
+        #Client to stop grasp planner.
         self.__stop_grasp_planner_cli = rospy.ServiceProxy('stop_grasp_planner',StopGraspPlanner)
-
-        self.__pick_and_place_cli = rospy.ServiceProxy('pick_and_place',PickAndPlace)
 
         self.__start = False
         self.__startUpState = False
@@ -80,29 +88,27 @@ class SortingAppNode:
         rospy.wait_for_service('ctrl_robot_move')
         rospy.loginfo("robot light service...")
         rospy.wait_for_service('ctrl_robot_light')
+        self.__statusbarpixel_cli(3,Neopixel(0,0,255,0),False)
+        rospy.sleep(0.3)
         rospy.loginfo("external motor service...")
         rospy.wait_for_service('ctrl_robot_extmotor')
         rospy.loginfo("robot gripper service...")
         rospy.wait_for_service('ctrl_robot_gripper')
-        self.__statusbarpixel_cli(3,Neopixel(0,0,255,0),False)
+        self.__statusbarpixel_cli(4,Neopixel(0,0,255,0),False)
         rospy.sleep(0.3)
         rospy.loginfo("connect robot service...")
         rospy.wait_for_service('ctrl_robot_connect')
         rospy.loginfo("disconnect robot service...")
         rospy.wait_for_service('ctrl_robot_disconnect')
-        self.__statusbarpixel_cli(4,Neopixel(0,0,255,0),False)
+        self.__statusbarpixel_cli(5,Neopixel(0,0,255,0),False)
         rospy.sleep(0.3)
         rospy.loginfo("detect conveyor system service...")
         self.__detect_conveyor_cli.wait_for_server()
-        self.__statusbarpixel_cli(5,Neopixel(0,0,255,0),False)
+        self.__statusbarpixel_cli(6,Neopixel(0,0,255,0),False)
         rospy.sleep(0.3)
         rospy.loginfo("metalchip detector services...")
         rospy.wait_for_service('/start_metalchip_detector')
         rospy.wait_for_service('/stop_metalchip_detector')
-        self.__statusbarpixel_cli(6,Neopixel(0,0,255,0),False)
-        rospy.sleep(0.3)
-        rospy.loginfo("pick and place service...")
-        rospy.wait_for_service('pick_and_place')
         self.__statusbarpixel_cli(7,Neopixel(0,0,255,0),False)
         rospy.sleep(0.3)
         rospy.loginfo("grasp planner services...")
